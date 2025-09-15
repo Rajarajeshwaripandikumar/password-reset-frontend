@@ -1,0 +1,59 @@
+:root{
+  --brand-bg: #111827;       /* dark navbar */
+  --brand-accent: #f59e0b;   /* amber */
+  --brand-primary: #0ea5a4;  /* teal */
+  --card-bg: #ffffff;
+  --muted: #6b7280;
+}
+
+body {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  min-height: 100vh;
+  color: #0f172a;
+}
+
+/* Navbar */
+.navbar-brand {
+  font-weight: 700;
+  color: white !important;
+}
+.navbar-custom {
+  background: var(--brand-bg);
+  box-shadow: 0 2px 8px rgba(2,6,23,0.25);
+}
+
+/* Card */
+.auth-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.06);
+  padding: 26px;
+}
+
+/* Buttons */
+.btn-accent {
+  background: var(--brand-accent);
+  color: #111827;
+  border: none;
+}
+.btn-accent:hover {
+  filter: brightness(.95);
+}
+
+/* Fancy headings */
+.h1-hero {
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #0f172a;
+}
+
+/* small helper */
+.form-center {
+  max-width: 540px;
+  margin: 40px auto;
+}
+.footer-note {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 12px;
+}
