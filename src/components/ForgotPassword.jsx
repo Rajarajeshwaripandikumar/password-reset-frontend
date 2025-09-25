@@ -1,6 +1,6 @@
 // src/components/ForgotPassword.jsx
 import React, { useState, useEffect } from "react";
-import API from "../api"; // expects API.requestPasswordReset(email)
+import API from "../api"; // expects requestPasswordReset
 import AlertMessage from "./AlertMessage";
 
 export default function ForgotPassword() {
@@ -12,19 +12,20 @@ export default function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAlert({ type: "", message: "" });
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setAlert({ type: "danger", message: "Please enter a valid email address." });
+      return;
+    }
     setLoading(true);
 
     try {
-      // use the function exported from api.js
       const res = await API.requestPasswordReset(email);
-      // res is parsed JSON like { message: "Password reset link sent..." }
-      setAlert({ type: "success", message: res.message || "Password reset link has been sent." });
+      setAlert({ type: "success", message: (res && (res.message || res.success)) || "Password reset link has been sent." });
       setSent(true);
       setEmail("");
     } catch (err) {
-      // api.handleResponse throws Error with message
-      let msg = err?.message || "Error sending reset link";
-      setAlert({ type: "danger", message: msg });
+      const message = err?.rawBody?.message || err?.message || `Error sending reset link (status ${err?.status || "unknown"})`;
+      setAlert({ type: "danger", message });
     } finally {
       setLoading(false);
     }
