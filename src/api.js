@@ -1,8 +1,11 @@
 // frontend/src/api.js
+// Hardened API helper for auth flows.
+// Set REACT_APP_API_URL to your backend base (e.g. https://password-reset-backend-nn1u.onrender.com)
+// Fallback is http://localhost:5000 for local dev.
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-/** toggle to true while debugging to see outgoing URLs/payloads */
+/** Toggle true for extra console logs during debugging */
 const DEBUG = false;
 function logRequest(method, url, body) {
   if (!DEBUG) return;
@@ -15,12 +18,12 @@ async function parseBodySafely(res) {
     if (ct.includes("application/json")) {
       return await res.json();
     } else {
-      // if text/html or empty, return raw text (useful for 404 pages from hosting)
+      // Return text for non-json responses (404 HTML pages, etc.)
       const text = await res.text();
       return text || null;
     }
   } catch (err) {
-    // parsing failed (empty body or bad JSON)
+    // Could not parse body (empty or bad JSON)
     return null;
   }
 }
@@ -29,10 +32,8 @@ async function handleResponse(res) {
   const body = await parseBodySafely(res);
 
   if (!res.ok) {
-    // try to extract a friendly message
     let message = "Request failed";
     if (body) {
-      // if body is an object containing message/error, prefer that
       if (typeof body === "object") {
         message = body.message || body.error || JSON.stringify(body);
       } else {
@@ -41,18 +42,17 @@ async function handleResponse(res) {
     } else {
       message = res.statusText || `HTTP ${res.status}`;
     }
-
     const e = new Error(message);
     e.status = res.status;
     e.rawBody = body;
     throw e;
   }
 
-  // success: return parsed JSON object if available, otherwise return null / text
+  // Success: return parsed body (object or text) or null
   return body;
 }
 
-/* Auth APIs */
+/* ========= Auth API functions ========= */
 
 // Register
 export async function registerUser(userData) {
@@ -78,7 +78,7 @@ export async function loginUser(email, password) {
   return handleResponse(res);
 }
 
-// Request password reset
+// Request password reset (forgot password)
 export async function requestPasswordReset(email) {
   if (!email) throw new Error("Email is required");
   const url = `${API_BASE_URL}/api/auth/forgot-password`;
@@ -91,10 +91,11 @@ export async function requestPasswordReset(email) {
   return handleResponse(res);
 }
 
-// Reset password (token in path)
+// Reset password (token-in-path). If your backend expects token-in-body, modify accordingly.
 export async function resetPassword(token, newPassword) {
   if (!token) throw new Error("Token is required");
-  const url = `${API_BASE_URL}/api/auth/reset-password/${token}`;
+  if (!newPassword) throw new Error("Password is required");
+  const url = `${API_BASE_URL}/api/auth/reset-password/${encodeURIComponent(token)}`;
   logRequest("POST", url, { password: newPassword });
   const res = await fetch(url, {
     method: "POST",
@@ -104,5 +105,6 @@ export async function resetPassword(token, newPassword) {
   return handleResponse(res);
 }
 
+// If you prefer default object export:
 const API = { registerUser, loginUser, requestPasswordReset, resetPassword };
 export default API;
