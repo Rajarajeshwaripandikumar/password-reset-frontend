@@ -1,27 +1,23 @@
-import React, { useEffect } from "react";
+// src/components/AlertMessage.jsx
+import React from "react";
 
-export default function AlertMessage({ type = "info", message, autoCloseMs }) {
-  const [visible, setVisible] = React.useState(!!message);
+/**
+ * Simple alert message component.
+ * Props: { type: "success" | "danger" | "", message: string }
+ */
+export default function AlertMessage({ type = "", message = "" }) {
+  if (!message) return null;
 
-  useEffect(() => {
-    if (message) setVisible(true);
-    if (autoCloseMs && message) {
-      const t = setTimeout(() => setVisible(false), autoCloseMs);
-      return () => clearTimeout(t);
-    }
-  }, [message, autoCloseMs]);
-
-  if (!message || !visible) return null;
-
-  const cls = {
-    success: "alert-success",
-    danger: "alert-danger",
-    info: "alert-info",
-    warning: "alert-warning"
-  }[type] || "alert-info";
+  const base = "alert p-2 my-3";
+  const cls =
+    type === "success"
+      ? `${base} alert-success`
+      : type === "danger"
+      ? `${base} alert-danger`
+      : `${base} alert-info`;
 
   return (
-    <div className={`alert ${cls} mt-3`} role="alert">
+    <div role="alert" className={cls}>
       {message}
     </div>
   );
