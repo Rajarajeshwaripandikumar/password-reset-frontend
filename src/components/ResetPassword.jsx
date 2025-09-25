@@ -28,18 +28,25 @@ export default function ResetPassword() {
     }
 
     try {
-      // Use the function exported from frontend/src/api.js
       const res = await API.resetPassword(token, password);
-      // res is parsed JSON, e.g. { message: "Password has been reset successfully" }
-      setAlert({ type: "success", message: res.message || "Password has been reset" });
+      const successMessage = (res && (res.message || res.success)) || "Password has been reset";
+      setAlert({ type: "success", message: successMessage });
       setPassword("");
-      setTimeout(() => navigate("/login"), 1500);
+      // Wait a bit so user sees the success alert, then redirect to login
+      setTimeout(() => navigate("/login"), 1400);
     } catch (err) {
-      // api.handleResponse throws Error with message
-      const message =
-        err?.message ||
-        (err?.response && (err.response.data?.message || JSON.stringify(err.response.data))) ||
-        "Error resetting password";
+      // Prefer structured server message, then err.message
+      let message = "Error resetting password";
+      if (err?.rawBody) {
+        if (typeof err.rawBody === "object") {
+          message = err.rawBody.message || err.rawBody.error || JSON.stringify(err.rawBody);
+        } else if (typeof err.rawBody === "string" && err.rawBody.trim()) {
+          message = err.rawBody;
+        }
+      } else if (err?.message) {
+        message = err.message;
+      }
+      if (err?.status) message = `${message} (status ${err.status})`;
       setAlert({ type: "danger", message });
     } finally {
       setLoading(false);
