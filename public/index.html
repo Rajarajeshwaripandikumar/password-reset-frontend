@@ -5,34 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0071DC" />
     <meta name="description" content="Password Reset Frontend — secure, simple reset flow for users" />
+
     <title>Password Reset — My App</title>
 
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/site.webmanifest" />
+    <!-- Favicon and PWA metadata -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
+    <!-- Open Graph tags -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Password Reset — My App" />
     <meta property="og:description" content="Secure password reset flow for users." />
-    <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
-    <meta property="og:url" content="https://your-app.example.com" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://password-reset-7.netlify.app" />
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-    <!-- remove the public styles.css link (we bundle CSS from src/index.css) -->
+    <!-- ✅ Global static stylesheet (fixes MIME type issue) -->
+    <link rel="stylesheet" href="/styles.css" />
 
     <style>
-      html,body,#root { height: 100%; }
-      body { margin: 0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%); color: #0f172a; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+      html,
+      body,
+      #root {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+        color: #0f172a;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      noscript {
+        display: block;
+        padding: 12px;
+        background: #fff7ed;
+        color: #92400e;
+        text-align: center;
+        font-weight: 600;
+      }
     </style>
   </head>
+
   <body>
-    <noscript style="display:block;padding:12px;background:#fff7ed;color:#92400e;text-align:center;font-weight:600;">
+    <noscript>
       JavaScript is disabled — this app requires JavaScript to function.
     </noscript>
 
     <div id="root"></div>
+
+    <!-- ✅ The actual React bundle will be auto-injected by Netlify build or Vite -->
+    <!-- If you are running static (no build), ensure your JS entry file is loaded manually -->
+    <!-- Example (if you don't use build step): -->
+    <!-- <script type="module" src="/src/index.js"></script> -->
   </body>
 </html>
